@@ -26,10 +26,12 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
+    this.x = 200;
+    this.y = 400;
 };
 
 Player.prototype.update = function(dt) {
-
+    
 };
 
 Player.prototype.render = function() {
