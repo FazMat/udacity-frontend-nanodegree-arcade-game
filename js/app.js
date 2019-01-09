@@ -51,6 +51,8 @@ Player.prototype.update = function() {
     //level done, start next level
     if (this.y < 64) {
         this.y = 400;
+        this.x = 202;
+        //level up
         this.level++;
         allEnemies.push(new Enemy());
     }
