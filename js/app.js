@@ -1,18 +1,16 @@
 // Enemies our player must avoid
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
+        // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    //starting location
-    //TODO: make it random(left/right, different y), off screen
-    this.x = 0;
-    this.y = 50;
-    //starting speed
-    //TODO: make it random +/- 
-    this.speed = 20;
+    //randomized enemy
+    this.randomStart();
+};
+
+Enemy.prototype.randomStart = function() {
+    this.x = -150;
+    this.y = Math.random() * 190 + 40;
+    this.speed = Math.floor((Math.random() * player.level) + 1) * 20;
 };
 
 // Update the enemy's position, required method for game
@@ -22,7 +20,9 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x += dt * this.speed;
-    if (this.x > 500) this.x = 0;
+    if (this.x > 500) {
+        this.randomStart();
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -37,15 +37,23 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 202;
     this.y = 400;
-    //not in use
-    //this.speed = 50;
+    //manage game difficulty
+    //the higher the level the more enemies
+    //gain a level with drowning
+    this.level = 0;
 };
 
 Player.prototype.update = function() {
-    if (this.y > 400) this.y = 400;
-    if (this.y < 64) this.y = 400;
+    //stay on screen
     if (this.x < 0) this.x = 0;
     if (this.x > 404) this.x = 404;
+    if (this.y > 400) this.y = 400;
+    //level done, start next level
+    if (this.y < 64) {
+        this.y = 400;
+        this.level++;
+        allEnemies.push(new Enemy());
+    }
 };
 
 Player.prototype.render = function() {
@@ -72,8 +80,7 @@ Player.prototype.handleInput = function(key) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-let enemy1 = new Enemy();
-let allEnemies = [enemy1];
+let allEnemies = [];
 let player = new Player();
 
 
