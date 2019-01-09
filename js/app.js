@@ -56,7 +56,24 @@ Player.prototype.update = function() {
         this.level++;
         allEnemies.push(new Enemy());
     }
+    this.getEaten();
 };
+
+//check collisions with enemies
+Player.prototype.getEaten = function() {
+    allEnemies.forEach(function(bug) {
+        if (bug.x + 70 > player.x &&
+            bug.x < player.x + 70 &&
+            bug.y + 70 > player.y &&
+            bug.y < player.y + 70) {
+                player.y = 400;
+                player.x = 202;
+                if (--player.level == 0) {
+                    console.log('game over');
+                }
+            }
+    });
+}
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
