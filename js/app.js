@@ -11,7 +11,8 @@ var Enemy = function() {
     this.x = 0;
     this.y = 50;
     //starting speed
-    this.speed = 5;
+    //TODO: make it random +/- 
+    this.speed = 20;
 };
 
 // Update the enemy's position, required method for game
@@ -20,6 +21,8 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x += dt * this.speed;
+    if (this.x > 500) this.x = 0;
 };
 
 // Draw the enemy on the screen, required method for game
@@ -32,16 +35,17 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = 200;
+    this.x = 202;
     this.y = 400;
-    this.speed = 50;
+    //not in use
+    //this.speed = 50;
 };
 
 Player.prototype.update = function() {
-    if (this.y > 410) this.y = 410;
-    if (this.y < 0) this.y = 0;
-    if (this.x < -16) this.x = -16;
-    if (this.x > 420) this.x = 420;
+    if (this.y > 400) this.y = 400;
+    if (this.y < 64) this.y = 400;
+    if (this.x < 0) this.x = 0;
+    if (this.x > 404) this.x = 404;
 };
 
 Player.prototype.render = function() {
@@ -51,16 +55,16 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(key) {
     switch (key) {
         case 'left':
-            this.x -= this.speed;
+            this.x -= 101;
         break;
         case 'right':
-            this.x += this.speed;
+            this.x += 101;
         break;
         case 'up':
-            this.y -= this.speed;
+            this.y -= 84;
         break;
         case 'down':
-            this.y += this.speed;
+            this.y += 84;
         break;
     }
 };
