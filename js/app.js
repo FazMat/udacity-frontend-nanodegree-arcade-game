@@ -48,9 +48,11 @@ Player.prototype.fixedStart  = function(char) {
     char.x = 202;
     char.y = 400;
     char.alive = true;
+    
 }
 
 Player.prototype.update = function() {
+    //console.log(this.x + ":" + this.y);
     //stay on screen
     if (this.x < 0) this.x = 0;
     if (this.x > 404) this.x = 404;
@@ -60,30 +62,38 @@ Player.prototype.update = function() {
         //level up
         this.level++;
         allEnemies.push(new Enemy());
+        allItems.push(new Item('Star'));
         this.alive = false;
         //looks weird, but let 'animation' finish first
         setTimeout(player.fixedStart, 100, player);
     }
-    this.getEaten();
+    if (this.alive) {
+        this.pickUpItem();
+        this.getEaten();
+    }
 };
+
+//pick up any item where you stand
+Player.prototype.pickUpItem = function() {
+    allItems.forEach(function(item) {
+
+    });
+}
 
 //check collisions with enemies
 Player.prototype.getEaten = function() {
-    if (player.alive) {
-        allEnemies.forEach(function(bug) {
-            if (bug.x + 70 > player.x &&
-                bug.x < player.x + 70 &&
-                bug.y + 70 > player.y &&
-                bug.y < player.y + 70) {
-                    player.alive = false;
-                    setTimeout(player.fixedStart, 100, player);
-                    if (--player.level < 0) {
-                        console.log('game over');
-                    }
+    allEnemies.forEach(function(bug) {
+        if (bug.x + 70 > player.x &&
+            bug.x < player.x + 70 &&
+            bug.y + 70 > player.y &&
+            bug.y < player.y + 70) {
+                player.alive = false;
+                setTimeout(player.fixedStart, 100, player);
+                if (--player.level < 0) {
+                    console.log('game over');
                 }
-        });
-    }
-    
+            }
+    });
 }
 
 Player.prototype.render = function() {
@@ -111,6 +121,7 @@ Player.prototype.handleInput = function(key) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 let allEnemies = [];
+let allItems = [];
 let player = new Player();
 
 
@@ -127,3 +138,13 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+var Item = function(type) {
+    this.sprite = `images/${type}.png`;
+    this.x = 202;
+    this.y = 100;
+};
+
+Item.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
