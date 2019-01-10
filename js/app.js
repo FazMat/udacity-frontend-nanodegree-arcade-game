@@ -35,13 +35,20 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = 202;
-    this.y = 400;
+    this.fixedStart(this);
     //manage game difficulty
     //the higher the level the more enemies
-    //gain a level with drowning
+    //gain a level with drowning (y < 64)
     this.level = 0;
+    this.alive = true;
 };
+
+//function to reset player character
+Player.prototype.fixedStart  = function(char) {
+    char.x = 202;
+    char.y = 400;
+    char.alive = true;
+}
 
 Player.prototype.update = function() {
     //stay on screen
@@ -49,30 +56,34 @@ Player.prototype.update = function() {
     if (this.x > 404) this.x = 404;
     if (this.y > 400) this.y = 400;
     //level done, start next level
-    if (this.y < 64) {
-        this.y = 400;
-        this.x = 202;
+    if (this.alive && this.y < 64) {
         //level up
         this.level++;
         allEnemies.push(new Enemy());
+        this.alive = false;
+        //looks weird, but let 'animation' finish first
+        setTimeout(player.fixedStart, 100, player);
     }
     this.getEaten();
 };
 
 //check collisions with enemies
 Player.prototype.getEaten = function() {
-    allEnemies.forEach(function(bug) {
-        if (bug.x + 70 > player.x &&
-            bug.x < player.x + 70 &&
-            bug.y + 70 > player.y &&
-            bug.y < player.y + 70) {
-                player.y = 400;
-                player.x = 202;
-                if (--player.level == 0) {
-                    console.log('game over');
+    if (player.alive) {
+        allEnemies.forEach(function(bug) {
+            if (bug.x + 70 > player.x &&
+                bug.x < player.x + 70 &&
+                bug.y + 70 > player.y &&
+                bug.y < player.y + 70) {
+                    player.alive = false;
+                    setTimeout(player.fixedStart, 100, player);
+                    if (--player.level < 0) {
+                        console.log('game over');
+                    }
                 }
-            }
-    });
+        });
+    }
+    
 }
 
 Player.prototype.render = function() {
@@ -101,6 +112,7 @@ Player.prototype.handleInput = function(key) {
 // Place the player object in a variable called player
 let allEnemies = [];
 let player = new Player();
+
 
 
 // This listens for key presses and sends the keys to your
