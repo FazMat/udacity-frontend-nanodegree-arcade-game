@@ -35,7 +35,7 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.fixedStart(this);
+    this.fixedStart();
     //manage game difficulty
     //the higher the level the more enemies
     //gain a level with drowning (y < 64)
@@ -44,15 +44,13 @@ var Player = function() {
 };
 
 //function to reset player character
-Player.prototype.fixedStart  = function(char) {
-    char.x = 202;
-    char.y = 400;
-    char.alive = true;
-    
+Player.prototype.fixedStart  = function() {
+    this.x = 202;
+    this.y = 400;
+    this.alive = true;
 }
 
 Player.prototype.update = function() {
-    //console.log(this.x + ":" + this.y);
     //stay on screen
     if (this.x < 0) this.x = 0;
     if (this.x > 404) this.x = 404;
@@ -65,7 +63,7 @@ Player.prototype.update = function() {
         allItems.push(new Item('Star'));
         this.alive = false;
         //looks weird, but let 'animation' finish first
-        setTimeout(player.fixedStart, 100, player);
+        setTimeout(this.fixedStart.bind(this), 100);
     }
     if (this.alive) {
         this.pickUpItem();
@@ -82,18 +80,20 @@ Player.prototype.pickUpItem = function() {
 
 //check collisions with enemies
 Player.prototype.getEaten = function() {
-    allEnemies.forEach(function(bug) {
-        if (bug.x + 70 > player.x &&
-            bug.x < player.x + 70 &&
-            bug.y + 70 > player.y &&
-            bug.y < player.y + 70) {
-                player.alive = false;
-                setTimeout(player.fixedStart, 100, player);
-                if (--player.level < 0) {
+    //allEnemies.forEach(function(bug) {
+    for (let i = 0; i < allEnemies.length; i++) {
+        let bug = allEnemies[i];
+        if (bug.x + 70 > this.x &&
+            bug.x < this.x + 70 &&
+            bug.y + 70 > this.y &&
+            bug.y < this.y + 70) {
+                this.alive = false;
+                setTimeout(this.fixedStart.bind(this), 100);
+                if (--this.level < 0) {
                     console.log('game over');
                 }
             }
-    });
+    }
 }
 
 Player.prototype.render = function() {
