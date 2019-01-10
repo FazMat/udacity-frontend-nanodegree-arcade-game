@@ -10,7 +10,7 @@ var Enemy = function() {
 Enemy.prototype.randomStart = function() {
     this.x = -150;
     this.y = Math.random() * 190 + 40;
-    this.speed = Math.floor((Math.random() * player.level) + 1) * 20;
+    this.speed = Math.floor(Math.ceil(Math.random() * player.level)) * 20;
 };
 
 // Update the enemy's position, required method for game
@@ -40,7 +40,6 @@ var Player = function() {
     //the higher the level the more enemies
     //gain a level with drowning (y < 64)
     this.level = 0;
-    this.alive = true;
 };
 
 //function to reset player character
@@ -48,6 +47,7 @@ Player.prototype.fixedStart  = function() {
     this.x = 202;
     this.y = 400;
     this.alive = true;
+    this.hasStar = false;
 }
 
 Player.prototype.update = function() {
@@ -55,6 +55,8 @@ Player.prototype.update = function() {
     if (this.x < 0) this.x = 0;
     if (this.x > 404) this.x = 404;
     if (this.y > 400) this.y = 400;
+    //can't go into water without a star
+    if (!this.hasStar && this.y < 64) this.y = 64;
     //level done, start next level
     if (this.alive && this.y < 64) {
         //level up
@@ -62,7 +64,7 @@ Player.prototype.update = function() {
         allEnemies.push(new Enemy());
         allItems.push(new Item('Star'));
         this.alive = false;
-        //looks weird, but let 'animation' finish first
+        //let 'animation' finish first
         setTimeout(this.fixedStart.bind(this), 100);
     }
     if (this.alive) {
@@ -73,9 +75,13 @@ Player.prototype.update = function() {
 
 //pick up any item where you stand
 Player.prototype.pickUpItem = function() {
-    allItems.forEach(function(item) {
-
-    });
+    for (let i = 0; i < allItems.length; i++) {
+        let item = allItems[i];
+        if (item.x == this.x && item.y == this.y) {
+            this.hasStar = true;
+            allItems.splice(i, 1);
+        }
+    }
 }
 
 //check collisions with enemies
@@ -88,6 +94,7 @@ Player.prototype.getEaten = function() {
             bug.y + 70 > this.y &&
             bug.y < this.y + 70) {
                 this.alive = false;
+                this.hasStar = false;
                 setTimeout(this.fixedStart.bind(this), 100);
                 if (--this.level < 0) {
                     console.log('game over');
@@ -121,7 +128,6 @@ Player.prototype.handleInput = function(key) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 let allEnemies = [];
-let allItems = [];
 let player = new Player();
 
 
@@ -140,11 +146,14 @@ document.addEventListener('keyup', function(e) {
 });
 
 var Item = function(type) {
+    this.type = type;
     this.sprite = `images/${type}.png`;
-    this.x = 202;
-    this.y = 100;
+    this.x = Math.floor(Math.random() * 5) * 101;
+    this.y = Math.floor(Math.random() * 3) * 84 + 64;
 };
 
 Item.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
+
+let allItems = [new Item('Star')];
