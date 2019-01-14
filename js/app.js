@@ -1,3 +1,5 @@
+const stars = document.getElementById('stars');
+
 // Enemies our player must avoid
 var Enemy = function() {
         // The image/sprite for our enemies, this uses
@@ -63,7 +65,7 @@ Player.prototype.update = function() {
     //level done, start next level
     if (this.alive && this.y < 64) {
         //level up
-        this.level++;
+        stars.innerText = ++this.level;
         allEnemies.push(new Enemy());
         allItems.push(new Item('Star'));
         this.alive = false;
