@@ -1,5 +1,7 @@
 const stars = document.getElementById('stars');
 const lives = document.getElementById('lives');
+const score = document.getElementById('score');
+const restartBtn = document.getElementById('restartBtn');
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -55,6 +57,7 @@ Player.prototype.fixedStart  = function() {
     this.hasStar = false;
     if (!allItems[0]) allItems.push(new Item('Star'));
     lives.innerText = this.lives;
+    stars.innerText = this.level;
 }
 
 //function to be called every frame
@@ -108,11 +111,22 @@ Player.prototype.getEaten = function() {
                 this.hasStar = false;
                 setTimeout(this.fixedStart.bind(this), 100);
                 if (--this.lives == 0) {
-                    lives.innerText = 'Game Over';
+                    score.firstElementChild.textContent = `Best score: ${this.best}`;
+                    score.style.visibility = 'visible';
                 }
                 return;
             }
     }
+}
+
+//function to restart the game with 3 lives
+Player.prototype.restart = function() {
+    player.lives = 3;
+    player.level = 0;
+    allItems = [];
+    allEnemies = [];
+    player.fixedStart();
+    score.style.visibility = 'hidden';
 }
 
 //function to draw character on screen
@@ -177,3 +191,4 @@ Item.prototype.render = function() {
 
 //start the game by placing player on screen
 player.fixedStart();
+restartBtn.addEventListener('click', player.restart);
