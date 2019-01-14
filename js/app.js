@@ -7,6 +7,7 @@ var Enemy = function() {
     this.randomStart();
 };
 
+//function to randomize enemies
 Enemy.prototype.randomStart = function() {
     this.x = -150;
     this.y = Math.random() * 190 + 40;
@@ -50,6 +51,8 @@ Player.prototype.fixedStart  = function() {
     this.hasStar = false;
 }
 
+//function to be called every frame
+//contains game logic
 Player.prototype.update = function() {
     //stay on screen
     if (this.x < 0) this.x = 0;
@@ -74,6 +77,7 @@ Player.prototype.update = function() {
 };
 
 //pick up any item where you stand
+//only stars at the moment
 Player.prototype.pickUpItem = function() {
     for (let i = 0; i < allItems.length; i++) {
         let item = allItems[i];
@@ -103,10 +107,12 @@ Player.prototype.getEaten = function() {
     }
 }
 
+//function to draw character on screen
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//function to control player character movement
 Player.prototype.handleInput = function(key) {
     switch (key) {
         case 'left':
@@ -145,6 +151,7 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+//item class to display collectibles
 var Item = function(type) {
     this.type = type;
     this.sprite = `images/${type}.png`;
@@ -152,8 +159,10 @@ var Item = function(type) {
     this.y = Math.floor(Math.random() * 3) * 84 + 64;
 };
 
+//function to render items
 Item.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
+//start the game with a star to pick up
 let allItems = [new Item('Star')];
