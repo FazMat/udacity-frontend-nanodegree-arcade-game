@@ -122,19 +122,21 @@ Player.prototype.render = function() {
 
 //function to control player character movement
 Player.prototype.handleInput = function(key) {
-    switch (key) {
-        case 'left':
-            this.x -= 101;
-        break;
-        case 'right':
-            this.x += 101;
-        break;
-        case 'up':
-            this.y -= 84;
-        break;
-        case 'down':
-            this.y += 84;
-        break;
+    if (this.lives) {
+        switch (key) {
+            case 'left':
+                this.x -= 101;
+            break;
+            case 'right':
+                this.x += 101;
+            break;
+            case 'up':
+                this.y -= 84;
+            break;
+            case 'down':
+                this.y += 84;
+            break;
+        }
     }
 };
 
