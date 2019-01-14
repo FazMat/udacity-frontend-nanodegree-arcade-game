@@ -1,4 +1,5 @@
 const stars = document.getElementById('stars');
+const lives = document.getElementById('lives');
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -38,11 +39,12 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.fixedStart();
     //manage game difficulty
     //the higher the level the more enemies
     //gain a level with drowning (y < 64)
     this.level = 0;
+    this.lives = 3;
+    this.best = 0;
 };
 
 //function to reset player character
@@ -51,6 +53,8 @@ Player.prototype.fixedStart  = function() {
     this.y = 400;
     this.alive = true;
     this.hasStar = false;
+    if (!allItems[0]) allItems.push(new Item('Star'));
+    lives.innerText = this.lives;
 }
 
 //function to be called every frame
@@ -67,8 +71,9 @@ Player.prototype.update = function() {
         //level up
         stars.innerText = ++this.level;
         allEnemies.push(new Enemy());
-        allItems.push(new Item('Star'));
         this.alive = false;
+        //keep record of best score
+        if (this.level > this.best) this.best = this.level;
         //let 'animation' finish first
         setTimeout(this.fixedStart.bind(this), 100);
     }
@@ -102,9 +107,10 @@ Player.prototype.getEaten = function() {
                 this.alive = false;
                 this.hasStar = false;
                 setTimeout(this.fixedStart.bind(this), 100);
-                if (--this.level < 0) {
-                    console.log('game over');
+                if (--this.lives == 0) {
+                    lives.innerText = 'Game Over';
                 }
+                return;
             }
     }
 }
@@ -135,6 +141,7 @@ Player.prototype.handleInput = function(key) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+let allItems = [];
 let allEnemies = [];
 let player = new Player();
 
@@ -166,5 +173,5 @@ Item.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-//start the game with a star to pick up
-let allItems = [new Item('Star')];
+//start the game by placing player on screen
+player.fixedStart();
