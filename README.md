@@ -2,19 +2,27 @@
 
 ## Table of Contents
 
+- [Introduction](#introduction)
 - [Instructions](#instructions)
-- [Contributing](#contributing)
+- [Dependencies](#dependencies)
+
+## Introduction
+
+A small arcade game as part of Udacity's Front-End Nanodegree course where you control a lonely character with suicidal tendencies.
 
 ## Instructions
 
-Use this [rubric](https://review.udacity.com/#!/rubrics/15/view) for self-checking your submission.
+To play the game just open index.html in a browser.
+You can move the character with the arrow buttons.
+On each level you must pick up a star and bring it into the water. After drowning, you get another chance to repeat the same process but this time there is a bug crossing the screen. Don't worry, it's slow. With each star you unleash yet another bug and they become faster too. At the end they will eat you, unless you stay on the gras. But that's boring. You have 3 lives. Gather as many stars as you can. Beat your own record by replaying.
 
-Make sure the functions you write are **object-oriented** - either class functions (like `Player` and `Enemy`) or class prototype functions such as `Enemy.prototype.checkCollisions`. Also make sure that the keyword `this` is used appropriately within your class and class prototype functions to refer to the object the function is called upon.
 
-Your **README.md** file should be updated with instructions on both how to 1. Run and 2. Play your arcade game.
+## Dependencies
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
-
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+In order to run the game properly you need these files:
+index.html
+style.css
+engine.js
+resources.js
+app.js
+plus the images folder to see anything :)
