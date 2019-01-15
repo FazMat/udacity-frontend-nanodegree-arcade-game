@@ -5,7 +5,7 @@ const restartBtn = document.getElementById('restartBtn');
 
 // Enemies our player must avoid
 var Enemy = function() {
-        // The image/sprite for our enemies, this uses
+    // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     //randomized enemy
@@ -43,9 +43,11 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
     //manage game difficulty
     //the higher the level the more enemies
-    //gain a level with drowning (y < 64)
+    //gain a level with drowning (this.y < 64)
     this.level = 0;
+    //you start the game with 3 lives
     this.lives = 3;
+    //keeping record of personal best score
     this.best = 0;
 };
 
@@ -55,7 +57,9 @@ Player.prototype.fixedStart  = function() {
     this.y = 400;
     this.alive = true;
     this.hasStar = false;
+    //place a star on screen
     if (!allItems[0]) allItems.push(new Item('Star'));
+    //update lives/stars
     lives.innerText = this.lives;
     stars.innerText = this.level;
 }
@@ -78,6 +82,7 @@ Player.prototype.update = function() {
         //keep record of best score
         if (this.level > this.best) this.best = this.level;
         //let 'animation' finish first
+        //needed to not just disappear but go into water first
         setTimeout(this.fixedStart.bind(this), 100);
     }
     if (this.alive) {
@@ -100,7 +105,6 @@ Player.prototype.pickUpItem = function() {
 
 //check collisions with enemies
 Player.prototype.getEaten = function() {
-    //allEnemies.forEach(function(bug) {
     for (let i = 0; i < allEnemies.length; i++) {
         let bug = allEnemies[i];
         if (bug.x + 70 > this.x &&
@@ -109,11 +113,15 @@ Player.prototype.getEaten = function() {
             bug.y < this.y + 70) {
                 this.alive = false;
                 this.hasStar = false;
+                //let 'animation' finish first
+                //needed to not just disappear but touch a bug first
                 setTimeout(this.fixedStart.bind(this), 100);
+                //game over or reborn?
                 if (--this.lives == 0) {
                     score.firstElementChild.textContent = `Best score: ${this.best}`;
                     score.style.visibility = 'visible';
                 }
+                //no need to check other bugs
                 return;
             }
     }
@@ -161,8 +169,6 @@ let allItems = [];
 let allEnemies = [];
 let player = new Player();
 
-
-
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
@@ -177,6 +183,7 @@ document.addEventListener('keyup', function(e) {
 });
 
 //item class to display collectibles
+//currently only stars
 var Item = function(type) {
     this.type = type;
     this.sprite = `images/${type}.png`;
